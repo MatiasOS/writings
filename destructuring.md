@@ -9,7 +9,7 @@ Is supported in node since ~v6.4.0, Chrome #49 and Firefox #41
 Let's start!
 
 ## Array destructuring
-In array destructuring each variable name on the array aps to the corresponding item at the same index on the destructured array.
+In array destructuring each variable name on the array maps to the corresponding item at the same index on the destructured array.
 
 This is our right side array.
 ```javascript
@@ -66,7 +66,7 @@ for (const [index, elem] of bar.entries()) {
 }
 ```
 
-Do you remember the swap function that you learn we starting to code? 
+Do you remember the swap function that you learn when starting to code? 
 ```javascript
 let playerOne = ‘Matt’;
 let playerTwo = ‘Alex’;
@@ -87,7 +87,7 @@ let playerTwo = ‘Alex’
 Maybe is a bit tricky, but cleaner and shorter when you get used to.
 
 ## Object destructuring
-For object destructuring we use an object in the left side of an assignment. This works almost the same as Array, only with a slight differences.
+For object destructuring we use an object in the left side of an assignment. This works almost the same as Array, only with slight differences.
 
 Our first example of object destructuring is to simplify module load. In this way, we only load the required modules.
 ```javascript
@@ -143,8 +143,8 @@ const { status: statusCode1, statusText} = await request(URI_1, BODY_1, HEADERS_
 
 
 # Conclusions
-We learn what destructuring is and how it is useful in so many ways. We can use it with objects and arrays, and is an excellent idea to import modules and returning values.
-Having this in mind,*and using it*, our code will be **shorter** and **clean** than before
+We learned what destructuring is and how it is useful in so many ways. We can use it with objects and arrays, and is an excellent idea to import modules and returning values.
+Having this in mind,*and using it*, our code will be **shorter** and **cleaner** than before
 
 Thanks for reading!
 ## Sources
