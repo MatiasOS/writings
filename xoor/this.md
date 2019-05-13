@@ -124,9 +124,7 @@ In React, sometimes we need to access `this.state`, and it can be tricky
 
 ```javascript
 class ui extends Component {
-  // ...
   render() {
-    // ...
     const self = this;
     someArray.map(function(e) => {
       return (<SomeComonent 
@@ -140,13 +138,9 @@ class ui extends Component {
 A good way to prevent this bad practice, is to use an arraw function
 ```javascript
 class ui extends Component {
-  // ...
   render() {
-    // ...
-    someArray.map((e) => (
-      <SomeComonent 
-        value={this.factor * e.value}
-      />
+    someArray.map(({id, value}) => (
+      return (<SomeComonent key={id} value={this.factor * value} />);
     ));
   }
 }
@@ -160,7 +154,7 @@ class ui extends Component {
   }
 
   render() {
-      <SomeComonent onClick={this.handleClick} />
+    return (<SomeComonent onClick={this.handleClick} />);
   }
 }
 ```
@@ -170,7 +164,7 @@ the function `this.handleClick` becomes the handler. Under the hood, roughly the
 const handler = this.handleClick;
 handler(); // or handler.call(undefined);
 ```
-And because of this, we ussually bind the functions.
+And because of this, we ussually bind functions
 
 ```javascript
 class ui extends Component {
@@ -178,18 +172,19 @@ class ui extends Component {
   constructor() {
     handleClick = this.handleClick.bind(this);
   }
-  // ...
   handleClick = (event) => {
-    // ... 
-    this.setState({});
+    this.setState({
+      // ...
+    });
   }
 
   render() {
-    // ...
-      <SomeComonent onClick={this.handleClick} />
+    return (<SomeComonent onClick={this.handleClick} />);
   }
 }
 ```
+
+To finish, I found this rules to understand better  what `this` is referencing: 
 
 1. Look to where the function was invoked.
 2. Is there an object to the left of the dot? If so, that’s what the “this” keyword is referencing. If not, continue to #3.
