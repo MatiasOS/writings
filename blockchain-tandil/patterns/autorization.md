@@ -1,4 +1,0 @@
-# Authorizrion
-
-## Ownership
-## Access restriction
