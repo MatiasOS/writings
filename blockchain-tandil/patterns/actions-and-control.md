@@ -156,9 +156,12 @@ contract CommitReveal {
 ```
 A contract that allows a party to commit to a choice and reveal itat a later point in time, traceable for anyone.
 
-## Oracle (Data provider)
+## Oracle 
+
+**Also known as:** Verifier, Data provider.
 
 **Problem:** An  application  scenario  requires  knowledge  contained  outsidethe blockchain, but Ethereum contracts cannot directly acquire informationfrom  the  outside  world.  On  the  contrary,  they  rely  on  the  outside  worldpushing information into the network.\
+
 **Solution:** Request external data through an oracle service that is connectedto the outside world and acts as a data carrier.\
 
 Ethereum contracts run within their own ecosystem, wherethey communicate with each other, but external data can onlyenter the system through outside interaction via a transaction(by  passing  data  to  a  method).  This  is  a  drawback,  becausemany contract use cases depend on external knowledge outsidethe  blockchain  (e.g.  price  feeds).
@@ -191,3 +194,55 @@ contract Oracle {
   }
 }
 ```
+
+## Reverse verifier (Oracle)
+
+The reverse veri�er of an existing system relies on smart contracts running on blockchain to validate
+requested data and check required status.
+
+In a software system, where blockchain is one of the components, the o�-chain components might need
+to use the data stored on blokchchain and the smart contracts running on blockchain to check certain conditions.
+
+**Problem:** Some domains use very large and mature systems, which comply with existing standards. For such
+domains, an non-intrusive approach is desired to leverage the existing complex systems with blockchain without
+changing the core of the existing systems.
+
+**Solution:** ID of the transactions or blocks on blockchain is a piece of data that can be easily integrated into the
+existing systems. Validation of the data can be implemented by smart contracts running on blockchain. Fig. 4 is a
+graphical representation of the pattern.
+
+```solidity
+// @ TODO
+```
+
+### Legal and Smart Contract pair
+
+A bidirectional binding is established between a legal agreement and the corresponding smart
+contract.
+
+The legal industry is becoming digitized, for example, using digital signatures has become a valid way
+to sign legal agreements. The Ricardian contract [8] was developed in the mid 1990s to interpret legal contracts
+digitally without losing the value of the legal prose. Digital legal agreements need to be executed and enforced.
+
+**Problem:** An independent trustworthy execution platform trusted by all the involved participants is needed to
+execute the digital legal agreement. Blockchain can be an ideal trusted platform to run digital legal agreements,
+which are bond with corresponding on-chain smart contracts.
+
+**Solution:** The smart contract implements conditions de�ned in the legal agreement. When deployed, there is a variable
+to store the hash value of the legal agreement, but is initially a blank value. The address of the smart contract is
+included in the legal agreement, and then the hash of the legal agreement is calculated and added to the contract
+variable. The immutability of the legal contract hash variable is implemented in custom code. By binding a
+physical agreement with a smart contract, the bridge between the on-chain physical agreement and the on-chain
+smart contract is established. The two directional binding makes sure that the legal agreement and smart contract
+have a 1-to-1 mapping.
+The smart contract digitalizes the conditions defined the agreement. Thus, these conditions can be checked
+and enforced automatically by the smart contract. However, not all the legal terms can be easily digitalized. The
+smart contract can also enable automated regulatory compliance checking in terms of the required information
+and process. However, the capability of compliance checking might be limited due to the constraints of smart
+contract programming language.
+
+```solidity
+// @TODO
+```
+
+
