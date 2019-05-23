@@ -183,3 +183,103 @@ contract LimitBalance {
   }
 }
 ```
+
+## Multiple Authorization
+
+A set of blockchain addresses which can authorise a transaction is pre-de�ned. Only a subset of the
+addresses is required to authorize transactions.
+In blockchain-based applications, activities might need to be authorized by multiple blockchain ad-
+dresses. For example, a monetary transaction may require authorization from multiple blockchain addresses.
+
+**Problem:** The actual addresses that authorize an activity might not be able to be decided due to the availability of the
+authorities.
+
+**Solution:** It would enable more dynamism if the set of blockchain addresses for authorization are not decided
+before the corresponding transaction being submited into the blockchain network, or the corresponding smart
+contract being deployed on blockchain. On the Bitcoin blockchain, a multi-signature mechanism can be used to
+require more than one private key to authorize a Bitcoin transaction. In Ethereum, smart contract can mimic
+multi-signature mechanism. More flexibly, an M-of-N multi-signature can be used to define that M out of N private
+keys are required to authorize the transaction. M is the threshold of authorization. This on-chain mechanism
+enables more �exible binding of authorities.
+
+```solidity
+pragma solidity ^0.5.0;
+
+contract EIP712MultiSig {
+    uint256 public nonce;
+    uint256 public threshold;
+    mapping(address => bool) public isOwner;
+
+    function () external payable {}
+
+    constructor(address[] memory owners, uint256 requiredSignatures) public {
+        threshold = requiredSignatures;
+        for (uint256 i = 0; i < owners.length; i++)
+            isOwner[owners[i]] = true;
+    }
+
+    function execute(address dest, bytes calldata data, bytes32[] calldata signatures) external {
+        bytes32 hash = keccak256(abi.encodePacked(
+          "\x19\x01",
+          bytes32(0xb0609d81c5f719d8a516ae2f25079b20fb63da3e07590e23fbf0028e6745e5f2),
+          keccak256(abi.encode(0x4a0a6d86122c7bd7083e83912c312adabf207e986f1ac10a35dfeb610d28d0b6, dest, nonce++, data))));
+
+        address prev;
+
+        for (uint256 i = 0; i < threshold; i++) {
+            address addr = ecrecover(hash, uint8(signatures[i][31]), signatures[i + 1], signatures[1 + 2]);
+            assert(isOwner[addr] == true);
+            assert(addr > prev); // check for duplicates or zero value
+            prev = addr;
+        }
+
+        if(!dest.delegatecall(data)) revert();
+    }
+}
+```
+
+## Off-Chain Secret Enabled Dynamic Authorization
+
+Using a hash created o�-chain to dynamically bind authority for a transaction.
+
+In blockchain-based applications, some activities need to be authorized by one or more participants
+that are unknown when a �rst transaction is submitted to blockchain.
+
+**Problem:** Sometimes, the authority who can authorize a given activity is unknown when the corresponding
+smart contract is deployed, or the corresponding transaction is submitted to the blockchain. Blockchain uses
+digital signature for authentication and transaction authorization. Blockchain does not support dynamic binding
+with an address of a participant which is not de�ned in the respective transaction or smart contract. All accounts
+that can authorize a second transaction have to be de�ned in the �rst transaction before that transaction is added
+to the blockchain.
+
+**Solution:** An off-chain secret can be used to enable a dynamic authorization when the participant authorizing a
+transaction is unknown beforehand. In the context of payment, for example, a smart contract can be used as
+an escrow. When the sender deposits the money to an escrow smart contract, a hash of a secret (e.g. a random
+string, called pre-image) is submitted with the money as well. Whoever receives the secret o�-chain can claim
+the money from the escrow smart contract by revealing the secret. With this solution, the receiver of the money
+does not need to be de�ned beforehand in the escrow contract. This can be generalized to any transaction that
+needs authorization from a dynamically bound participant. Note that since the secret is revealed, it cannot be
+reused. One variant is to lock multiple transactions with the same secret – by unlocking one, all of them are
+unlocked.
+
+```solidity
+// TODO
+```
+
+
+## X-Confirmation
+
+Waiting for enough number of blocks as con�rmations to ensure that a transaction added into
+blockchain is immutable with high probability.
+
+Immutability of a blockchain using Proof-of-work (Nakamoto) consensus is probabilistic immutability.
+There is always a chance that the most recent few blocks are replaced by a competing chain fork.
+
+**Problem:** At the time a fork occurs, there is usually no certainty as to which branch will be permanently kept in
+the blockchain and which branches will be discarded. The transactions that were included in the branches being
+discarded eventually go back to the transaction pool and being added into a later block.
+
+**Solution:** From the application perspective, one security strategy is to wait for a certain number (X) of blocks
+to be generated after the transaction is included into one block. After X blocks, the transaction is taken to
+be committed and thus perceived as immutable [17]. The value of X can be decided by the developers of the
+blockchain-based applications.
