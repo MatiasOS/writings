@@ -51,6 +51,27 @@ contract Auction {
 }
 ```
 
+## Incentive Execution
+
+Reward is provided to the caller of the contract function for invoking the execution.
+
+Smart contracts are event-driven programs, which cannot execute autonomously. All the functions
+de�ned in a smart contract need to be triggered either by a transaction from external account or another smart
+contract to execute. Other than the functions that provide regular services to users, some functions need to run
+asynchronously from regular user interaction, for example, to clean up the expired records, or make dividend
+payouts etc. Such functions usually involve a time, after which the function should start.
+
+**Problem:** Users of a smart contract have no direct bene�t from calling the accessorial functions. If a public
+blockchain is used, executing these functions causes extra monetary cost. Some accessorial functions are expensive
+to execute.
+
+**Solution:** Reward the caller of a function defined in a smart contract for invoking the execution, for example,
+sending back a percentage of payout to the caller to reimburse the (gas) execution cost.
+
+```solidity
+// TODO
+````
+
 ## State machine
 
 **Problem:** An application scenario implicates different behavioural stagesand transitions.\
