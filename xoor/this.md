@@ -3,15 +3,13 @@
 First of all, watch this [video](https://youtu.be/_NNYI8VbFyY), and then you can continue reading.\
 I remember a long time ago struggling with `this`, `bind`, `self = this` and several related problems. But in some ponit, I found a post with that [video](https://youtu.be/_NNYI8VbFyY) that help me a lot to undestand this problem. If you know the post, please leave the link in comments!
 
-To understand this problem, we must know that
-```
-The this keyword does not refer to the function in which it is used or it’s scope. It refers to the object on which a function is being executed and depends entirely on the call-site of the function.
-```
-\
-Javascript has different ways to bind `this`. We'll analize the differences in the next sections.
+Second, we must understand that the `this` keyword doesn't refer to the function in which it is used or it’s scope. It refers to the object on which a function is being executed and depends entirely on the call-site of the function.
+
+That means that Javascript has a dynamic binding for `this`. We'll compare implicit binding with explicit binding, that is `.call()`, `.apply`, `.bind`, `new`, `funtion` and `arrow function`.
 
 ## Implicit binding
 
+Implicit binding is the default behavior for the interpreter. Hence, `this` points to the object where the function is used
 ```javascript
 const food = {
   kind: 'schnitzel',
@@ -22,7 +20,7 @@ const food = {
 food.WhatIAm() // Prints -> Hi! I'm a schnitzel
 ```
 
-But, if we create a new reference to this function
+But, if we create a new reference to the function `WhatIAmHere`
 
 ```javascript
 const WhatIAmHere = food.WhatIAm
@@ -30,15 +28,15 @@ WhatIAmHere(); // Prints -> Hi! I'm a undefined
 ```
 `this.kind` is undefined! It's beacuse, `this` points to a global object (window in the browser, and process in node).
 
-Here, is defined on the `food` object. But we need to look where it is called.  A trick is to look at the left side of the function call. The object that is standing before the dot is what the `this` keyword will be implicitly bounded to.
+`WhatIAmHere` is defined on the `food` object. But we need to look where it is called. Looking at the object at the left side of the function call is what the `this` keyword will be implicitly bounded to.
 
 ## Explicit binding
 
-We need some way for explicitly bindining. Those ways are `call`, `apply`,  `bind` and `new`.
+To change to where `this` is bounded. We need to use explicitly bindining. The ways to change are `call`, `apply`,  `bind` and `new`.
 
 ### Call
 
-The `.call` function allows you to pass in the object to which the `this` keyword should be bound to. It also allows you to pass the arguments for the function.
+The `.call` function allows you to specify the value for `this` keyword should be bound to. It also allows you to pass the arguments for the function.
 
 ```javascript
 function WhatIAm(arg1, arg2, arg3, ...) {
@@ -51,7 +49,7 @@ const food = {
 
 WhatIAm.call(food, arg1, arg2, arg3, ...); // Prints -> Hi! I'm a milanesa
 ```
-`this` is poiting to the `food` object because is passed as first parameter..
+`this` is poiting to the `food` object because is passed as first parameter.
 
 ### Apply
 
@@ -72,7 +70,7 @@ WhatIAm.call( food, [arg1, arg2, arg3] ); // Prints -> Hi! I'm a milanesa
 
 ### Bind 
 
-The `.bind` function is a little bit different than the first two. It creates a new function that will call the original one with `this` bound to whatever was passed as parameter.
+The `.bind` function is a little bit different than the first two. It creates a new function, that will call the original one, but with `this` bound to whatever was passed as parameter.
 
 ```javascript
 function WhatIAm() {
@@ -86,10 +84,11 @@ const food = {
 const whatKindOfFood = WhatIAm.bind(food);
 whatKindOfFood(); // Prints -> Hi! I'm a milanesa
 ```
+And that folks, is what is happening in React when we use `this.handleClick = this.handleClick.bind(this)`.\
 
 ### New Keyword
 
-Whenever you invoke a function with the `new` keyword, under the hood, the JavaScript interpreter will create a brand new object for us and call it `this`. If a function was called with `new`, `this` keyword is referencing that new object.
+Whenever you invoke a function with the `new` keyword, under the hood, the JavaScript creates a brand new object for us, and call it `this`. If a function was called with `new`, `this` is bound to the new object.
 
 ```javascript
 function food (kind) {
@@ -119,7 +118,7 @@ This happens because `this` isn't referencing `food` object.
 
 ## Conclusion
 
-As final words, I want to show a few scenarios where is commonly used:
+As final words, here a few scenarios where is commonly used:
 In React, sometimes we need to access `this.state`, and it can be tricky
 
 ```javascript
@@ -135,7 +134,9 @@ class ui extends Component {
   }
 }
 ```
+
 A good way to prevent this bad practice, is to use an arrow function
+
 ```javascript
 class ui extends Component {
   render() {
@@ -145,6 +146,7 @@ class ui extends Component {
   }
 }
 ```
+
 Another common place for this kind of problems is handlers methods
 
 ```javascript
@@ -158,17 +160,18 @@ class ui extends Component {
   }
 }
 ```
+
 the function `this.handleClick` becomes the handler. Under the hood, roughly the following code happens
 
 ```javascript
 const handler = this.handleClick;
 handler(); // or handler.call(undefined);
 ```
+
 And because of this, we ussually bind functions
 
 ```javascript
 class ui extends Component {
-
   constructor() {
     handleClick = this.handleClick.bind(this);
   }
@@ -184,7 +187,7 @@ class ui extends Component {
 }
 ```
 
-To finish, I found this rules to understand better  what `this` is referencing: 
+To finish, this rules to understand better to where `this` is referencing: 
 
 1. Look to where the function was invoked.
 2. Is there an object to the left of the dot? If so, that’s what the “this” keyword is referencing to. If not, continue to #3.
