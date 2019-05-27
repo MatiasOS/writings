@@ -281,5 +281,5 @@ discarded eventually go back to the transaction pool and being added into a late
 
 **Solution:** From the application perspective, one security strategy is to wait for a certain number (X) of blocks
 to be generated after the transaction is included into one block. After X blocks, the transaction is taken to
-be committed and thus perceived as immutable [17]. The value of X can be decided by the developers of the
+be committed and thus perceived as immutable. The value of X can be decided by the developers of the
 blockchain-based applications.

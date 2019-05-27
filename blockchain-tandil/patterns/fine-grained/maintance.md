@@ -170,4 +170,6 @@ but with a structure consistent with its original template.
 // TODO
 ```
 
+## Incentive Execution
 
+Reward is provided to the caller of the contract function for invoking the execution.
