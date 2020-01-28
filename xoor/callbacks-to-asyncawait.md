@@ -1,6 +1,6 @@
 # From callbacks to async/await
 
-I stared coding in Abap, with a very sequential and step by step reports where everything works as expected. An team of coworkers where working in an internal reporting app. As the workload down with Abap, I moved to Javascript world, and that was my first `close encounter` with callback hell. 
+I stared coding in Abap, with a very sequential and step by step reports where everything works as expected. A team of coworkers were working in an internal reporting app. As the workload diminished with Abap, I moved to the Javascript world, and that was my first `close encounter` with callback hell. 
 I remember being lost among so many functions, doing console here, console there, why is this undefined?
 That sounds familiar to you? Just keep reading!
 
@@ -41,7 +41,7 @@ functionWithCallback(1, 2, () => {
 });
 ```
 
-That harmless indentation is fine, but it get worse and bigger when we need a sequence of asynchronous calls. Ex.
+That harmless indentation is fine, but it gets worse and bigger when we need a sequence of asynchronous calls. Ex.
 ```javascript
 /*
 * We want to fetch users that know how to prepare a list of recipes`.
@@ -62,9 +62,9 @@ fetch(USERS_API_URI, (err, user) => {
 
 We can see problems here with readability, error handling and race conditions. 
 We have `if (error) throw error;` inside each callback. This brakes [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
-On the other hand , we don't really know wich one recipe will come first because API calls depends on server loads and network traffic. 
+On the other hand , we don't really know wich recipe will come first because API calls depends on server loads and network traffic. 
 
-We can use named function for each callback to improve readability a bit
+We can use named functions for each callback to improve readability a bit
 ```javascript
 const handleUserResponse = (err, user) => {
   if (err) throw err;
@@ -84,18 +84,17 @@ handleRecipeResponse = (err, recipe) => {
 fetch(USERS_API_URI, handleUserResponse);
 ```
 
-Still we have racing and error handling issues. This leads to maintenance and readability problems. 
-That grows until code become unmanageable.
+We still have racing and error handling issues. This leads to maintenance and readability problems. 
+That grows until code becomes unmanageable.
 
-We reach  point where the code is mostly functions callbacks, check if error exists. This is callback hell! also called pyramid of
-doom. I know! Sounds really tragic.
+We reach a point where the code is mostly functions, callbacks, check if error exists. This is callback hell! also called pyramid of doom. I know! Sounds really tragic.
 
 Callback Hell can be avoided with our next approach, Promises.
 
 ## Promises
 
-With Promises, we can make ou code more readable. Besides eases the understanding of the order of execution of our code.
-A Promise is a proxy for a value, not necessarily known when the promise is created. It allows you to associate handlers with an asynchronous action with an eventual success value or failure reason.
+With Promises, we can make our code more readable. Besides, it eases the understanding of the order of execution of our code.
+A Promise is a proxy for a value, not necessarily known at the moment the promise is created. It allows you to associate handlers with an asynchronous action with an eventual success value or failure reason.
 
 ```javascript
 const aPromise = new Promise((resolve, reject) => {
@@ -249,7 +248,7 @@ We define our functions as `async` and what part of the code will have to `await
 
 An async function can contain an `await` expression that pauses the execution of the async function to wait for, then resumes the async function's execution and evaluates as the resolved value.
 
-Having the code wel structured with Promise, is really easy and fast to move to `async/await`. 
+Having the code well structured with Promise, is really easy and fast to move to `async/await`. 
 
 We could use the synchronous 
 ```javascipt 
@@ -320,7 +319,7 @@ async function (param) {
 
 ## Final words
 
-* Why should you start using the JavaScript async function today? Yes, we should!
+* Should you start using the JavaScript async function today? Yes, we should! Why?
   - The resulting code is much cleaner.
   - Error handling is much simpler and it relies on try/catch just like in any other synchronous code.
   - Debugging is much simpler. Setting a break-point inside a `.then` block will not move to the next `.then` because it only steps through synchronous code. But, you can step through await calls as if they were synchronous calls.
