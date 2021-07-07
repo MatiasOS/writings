@@ -1,11 +1,10 @@
 # From callbacks to async/await
 
-I stared coding in Abap, with a very sequential and step by step reports where everything works as expected. A team of coworkers were working in an internal reporting app. As the workload diminished with Abap, I moved to the Javascript world, and that was my first `close encounter` with callback hell. 
-I remember being lost among so many functions, doing console here, console there, why is this undefined?
-That sounds familiar to you? Just keep reading!
+I started coding in Abap, with very sequential and step by step reports where everything works as expected. A team of coworkers were working in an internal reporting app. As the workload diminished with Abap, I moved to the Javascript world, and that was my first close encounter with callback hell. 
+I remember being lost among so many functions, doing console here, console there, why is this undefined? That sounds familiar to you? Just keep reading!
 
 ## Callbacks
-A callback is a function that is passed to a another function to be excecuted at some point. Ex:
+A callback is a function that is passed to another function to be executed at some point. Ex:
 
 ```javascript
 const callBackFunction = () => {
@@ -62,9 +61,10 @@ fetch(USERS_API_URI, (err, user) => {
 
 We can see problems here with readability, error handling and race conditions. 
 We have `if (error) throw error;` inside each callback. This brakes [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
-On the other hand , we don't really know wich recipe will come first because API calls depends on server loads and network traffic. 
+On the other hand, we don't really know which recipe will come first because API calls depend on server loads and network traffic. 
 
 We can use named functions for each callback to improve readability a bit
+
 ```javascript
 const handleUserResponse = (err, user) => {
   if (err) throw err;
@@ -87,14 +87,14 @@ fetch(USERS_API_URI, handleUserResponse);
 We still have racing and error handling issues. This leads to maintenance and readability problems. 
 That grows until code becomes unmanageable.
 
-We reach a point where the code is mostly functions, callbacks, check if error exists. This is callback hell! also called pyramid of doom. I know! Sounds really tragic.
+We reach a point where the code is mostly functions, callbacks, check if an error exists. This is callback hell! also called the pyramid of doom. I know! It sounds really tragic.
 
 Callback Hell can be avoided with our next approach, Promises.
 
 ## Promises
 
 With Promises, we can make our code more readable. Besides, it eases the understanding of the order of execution of our code.
-A Promise is a proxy for a value, not necessarily known at the moment the promise is created. It allows you to associate handlers with an asynchronous action with an eventual success value or failure reason.
+A Promise is a proxy for value, not necessarily known at the moment the promise is created. It allows you to associate handlers with an asynchronous action with an eventual success value or failure reason.
 
 ```javascript
 const aPromise = new Promise((resolve, reject) => {
@@ -120,7 +120,7 @@ Multiple callbacks may be added by calling `.then()` several times. Each callbac
 
 With a chain on `.then` if an error happens on the first one it will skip subsequent `.then` until it finds a `.catch`. 
 
-Lets refactor our code using Promises
+Let's refactor our code using Promises
 ```javascript
 fetch(USERS_API_URI)
   .then((user) => {
@@ -136,7 +136,7 @@ fetch(USERS_API_URI)
   }) 
 ```
 
-This is still a bit confusing still, lets use named functions instead of anonymous
+This is still a bit confusing still, let's use named functions instead of anonymous
 ```javascript
 fetch(USERS_API_URI)
   .then(handleUsersApiResponse)
@@ -180,7 +180,7 @@ doSomething().then(function(result) {
 
 #### Unnecessary nesting
 
-If we don't chain things together properly, we need nesting to hanlde code dependecies
+If we don't chain things together properly, we need nesting to handle code dependencies
 
 ```javascript
 db.findAll().then((result) => {
@@ -214,7 +214,7 @@ db.allDocs()
 
 #### Is everything resolved? 
 
-Other common error is believe that all Promises have been resolved!
+Another common error is to believe that all Promises have been resolved!
 ```javascript
 // I want to remove() all docs
 db.allDocs({include_docs: true}).then(function (result) {
