@@ -6,7 +6,7 @@ Esta guía cubre cómo firmar mensajes con **Brink** para que algún ejecutor pu
 Una orden condicional, es un tipo especial de intercambio que sólo se puede ejecutar cuando se cumple una condición. Por ejemplo, podemos pensar un orden de 1 ETH por 2100 DAI (Al día de escribir este artículo, 1 ETH tiene un valor aproximado de 2030 DAI). Cuándo el valor del mercado llegue a los valores apropiados, un ejecutor puede tomar la orden y realizar el intercambio.
 
 ## Configuración
-El primer paso para esta aventura es configurar un nuevo proyecto de node. Utilizando el comando [yarn init](https://classic.yarnpkg.com/lang/en/docs/cli/init/) o [npm init](https://docs.npmjs.com/cli/v6/commands/npm-init) se crea el nuevo directorio que contiene **package.json**. Durante todo el artículo se utiliza yarn
+El primer paso para esta aventura es configurar un nuevo proyecto de node. Utilizando el comando [yarn init](https://classic.yarnpkg.com/lang/en/docs/cli/init/) o [npm init](https://docs.npmjs.com/cli/v6/commands/npm-init) se crea el nuevo directorio que contiene **package.json**. Durante todo el artículo se utiliza *yarn*.
 
 Una vez creado el proyecto, se accede  al directorio y se instalan las dependencias necesarias (*dotenv*, *ethers* y *@brinkninja/sdk*).
 
@@ -17,7 +17,7 @@ $ yarn add dotenv ethers @brinkninja/sdk
 ### dotenv
 Dotenv es un módulo que carga variables de entorno de un archivo llamado **.env**. 
 
-La idea general de dotenv, es extraer las variables de configuración del código mejorando la usabilidad y evitando hacer públicos datos sensibles, como una clave privada. Para esto, es importante no agregar al sistema de control de versiones (Posiblemente git).
+La idea general de *dotenv* es extraer las variables de configuración del código mejorando la usabilidad y evitando hacer públicos datos sensibles, como una clave privada. Para esto, es importante no agregar al sistema de control de versiones (Posiblemente git).
 
 Para este script, vamos a crear un archivo con una entrada, *WALLET_MNEMONIC*, la cual vamos a cargar con una frase de recuperación. En caso de no tener una, para realizar pruebas, se puede genera [acá](https://iancoleman.io/bip39/).
 
@@ -40,18 +40,17 @@ Las operaciones en Ethereum se encuentran por fuera del rango de javascript. Par
 
 ### Brink SDK
 Esta biblioteca se utiliza para interactuar con las cuentas de Brink, como el dueño de la misma, o como un ejecutor de mensajes. 
-
 En este post, solo veremos los métodos para firmar transacciones.
 
 ## Manos a la obra
-El primer paso es crear una instancia de accountSigner. Para esto necesitamos una signer de ethers y la red sobre la que vamos a ejecutar ordenes. Para estas pruebas vamos a usar la testnet de [rinkeby](https://www.rinkeby.io/).
+El primer paso es crear una instancia de accountSigner. Para esto necesitamos una signer de ethers y la red sobre la que vamos a ejecutar ordenes. Para estas pruebas vamos a usar la testnet de [rinkeby](https://www.rinkeby.io/):
 
 ```javascript
 const signer = await new ethers.Wallet.fromMnemonic(WALLET_MNEMONIC)
 const brinkAccountSigner = brinkSDK.accountSigner(signer, 'rinkeby')
 ```
 
-Con la nueva instancia de account signer, podemos crear un primer mensaje
+Con la nueva instancia de account signer, podemos crear un primer mensaje:
 ```javascript
 const signedEthToToken = await brinkAccountSigner.signEthToTokenSwap(
   BN(0), // bitmapIndex
@@ -72,7 +71,7 @@ const signedEthToToken = await brinkAccountSigner.signEthToTokenSwap(
 
 **expiryBlock** es el bloque hasta el cual es válida la transacción. Lo dejamos como *undefined* para indicar que siempre es válida.
 
-Esta función devuelve un JSON con formato
+Esta función devuelve un JSON con formato:
 ```json
 {
   "message": "0x7e954b39fac51f053c48ec40812c43bd1ccb8e43989b4295f476a8876d9f1011",
@@ -164,7 +163,7 @@ Esta función devuelve un JSON con formato
 ```
 
 
-
+Otra opción es intercambiar tokens por ETH utilizando el método **signTokenToEthSwap**:
 ```javascript
 const signedTokenToEth = await brinkAccountSigner.signTokenToEthSwap(
   BN(0), // bitmapIndex
@@ -177,7 +176,7 @@ const signedTokenToEth = await brinkAccountSigner.signTokenToEthSwap(
 ```
 Notar que para el método **signTokenToEthSwap**, **ethAmount** y **tokenAmount** aparecen en distinto orden.
 
-El último mensaje a firmar es un intercambio de tokens por otros
+El último mensaje a firmar es un intercambio de tokens por otros utilizando **signTokenToTokenSwap**
 ```javascript
 const signedTokenToToken = await brinkAccountSigner.signTokenToTokenSwap(
   BN(0), // bitmapIndex
@@ -191,7 +190,7 @@ const signedTokenToToken = await brinkAccountSigner.signTokenToTokenSwap(
 ```
 En este mensaje, *tokenInAddress* es el token a enviar y *tokenOutAddress* el token a recibir. 
 
-Con esto último, el script completo es
+Con esto último, el script completo es:
 ```javascript
 require('dotenv').config()
 const ethers = require('ethers')
@@ -247,15 +246,3 @@ run()
 ```
 
 Brink está construyendo una infraestructura crítica para órdenes condicionales en Ethereum. Si te interesa saber más, podés seguirnos en [Twitter](https://twitter.com/BrinkTrade) o [Discord](https://t.co/tyu5acJHz6)
-
-
-
-
-
-
-
-
-
-
-
-
