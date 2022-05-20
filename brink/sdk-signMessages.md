@@ -202,7 +202,7 @@ const { WALLET_MNEMONIC } = process.env
 
 const run = async () => {
   const signer = await new ethers.Wallet.fromMnemonic(WALLET_MNEMONIC)
-  const brinktSigner = brinkSDK.accountSigner(signer, 'rinkeby')
+  const brinkSigner = brinkSDK.accountSigner(signer, 'rinkeby')
 
   const signedEthToToken = await brinkSigner.signEthToTokenSwap(
     BN(0), // bitmapIndex
